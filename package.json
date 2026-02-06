@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
-    "start": "concurrently \"cd server && npm start\" \"cd client && npm run dev\"",
-    "build": "cd client && npm install && npm run build",
-    "postinstall": "cd client && npm install && cd ../server && npm install",
+    "start": "concurrently \"npm start --workspace=server\" \"npm run dev --workspace=client\"",
+    "build": "npm run build --workspace=client",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

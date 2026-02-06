@@ -16,6 +16,14 @@
 *   **STEP Conversion**: Includes a mocked process for converting STEP files to GLB for web viewing.
 *   **File Management**: Upload, list, and store 3D assets using MongoDB GridFS.
 
+## Screenshots
+
+![Dashboard](screenshots/dashboard.png)
+*The main dashboard with the upload zone and asset list.*
+
+![3D Viewer](screenshots/viewer.png)
+*Interactive 3D viewer displaying a model.*
+
 ## Tech Stack
 
 ### Frontend

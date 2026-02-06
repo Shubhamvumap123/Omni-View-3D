@@ -96,7 +96,40 @@ app.get('/api/assets', async (req, res) => {
     }
 });
 
-// 3. Get File Content
+// 3. Delete Asset
+app.delete('/api/assets/:id', async (req, res) => {
+    try {
+        const asset = await ModelAsset.findById(req.params.id);
+        if (!asset) {
+            return res.status(404).json({ error: 'Asset not found' });
+        }
+
+        const bucket = getGridFSBucket();
+
+        // Delete original file
+        if (asset.originalFileId) {
+            await bucket.delete(asset.originalFileId).catch(err => console.warn('Failed to delete original file:', err.message));
+        }
+
+        // Delete renderable file if different
+        if (asset.renderableFileId && asset.renderableFileId.toString() !== asset.originalFileId.toString()) {
+            await bucket.delete(asset.renderableFileId).catch(err => console.warn('Failed to delete renderable file:', err.message));
+        }
+
+        // Delete annotations
+        await Annotation.deleteMany({ assetId: asset._id });
+
+        // Delete asset record
+        await ModelAsset.findByIdAndDelete(req.params.id);
+
+        res.json({ message: 'Asset deleted successfully' });
+    } catch (err) {
+        console.error('Delete error:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 4. Get File Content
 app.get('/api/files/:id', (req, res) => {
     try {
         const bucket = getGridFSBucket();
@@ -117,7 +150,7 @@ app.get('/api/files/:id', (req, res) => {
     }
 });
 
-// 4. Annotations
+// 5. Annotations
 app.post('/api/annotations', async (req, res) => {
     try {
         const { assetId, text, position, cameraState } = req.body;

@@ -37,6 +37,7 @@ function App() {
             assets={assets}
             selectedAsset={selectedAsset}
             onSelect={setSelectedAsset}
+            onDeleteSuccess={fetchAssets}
           />
         </div>
         <div className="viewer-area">
